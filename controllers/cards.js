@@ -1,4 +1,6 @@
-const { DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR } = require('../utils/errors');
+const {
+  DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR,
+} = require('../utils/errors');
 const Card = require('../models/card');
 
 const getCards = (req, res) => {

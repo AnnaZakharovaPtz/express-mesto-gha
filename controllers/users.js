@@ -1,5 +1,5 @@
 const {
-  DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR
+  DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR,
 } = require('../utils/errors');
 const User = require('../models/user');
 
