@@ -20,7 +20,11 @@ const removeCardById = (req, res) => {
         res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемая карточка не найдена' });
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемая карточка не найдена' });
+        return;
+      }
       res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
@@ -58,6 +62,10 @@ const addLikeToCard = (req, res) => {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
         return;
       }
+      if (err.name === 'CastError') {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемая карточка не найдена' });
+        return;
+      }
       res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
@@ -78,6 +86,10 @@ const removeLikeFromCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
+        return;
+      }
+      if (err.name === 'CastError') {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
