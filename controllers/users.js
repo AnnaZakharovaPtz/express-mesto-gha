@@ -1,4 +1,6 @@
-const { BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR } = require('../utils/errors');
+const {
+  DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR
+} = require('../utils/errors');
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -21,11 +23,7 @@ const getUserById = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
-        return;
-      }
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
         return;
       }
@@ -37,7 +35,7 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => {
-      res.send(user);
+      res.status(DOCUMENT_CREATED).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

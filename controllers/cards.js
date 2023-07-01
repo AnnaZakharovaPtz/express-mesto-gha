@@ -1,4 +1,4 @@
-const { BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR } = require('../utils/errors');
+const { DOCUMENT_CREATED, BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR } = require('../utils/errors');
 const Card = require('../models/card');
 
 const getCards = (req, res) => {
@@ -33,7 +33,7 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user })
     .then((card) => {
-      res.send(card);
+      res.status(DOCUMENT_CREATED).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -58,11 +58,7 @@ const addLikeToCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
-        return;
-      }
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
         return;
       }
@@ -84,11 +80,7 @@ const removeLikeFromCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
-        return;
-      }
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
         return;
       }
