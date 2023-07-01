@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { NOT_FOUND_ERROR } = require('./utils/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -19,7 +20,8 @@ app.use((req, res, next) => {
 });
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-
-app.listen(PORT, () => {
-  console.log(`Сервер работает, порт ${PORT}`);
+app.use((req, res) => {
+  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
+
+app.listen(PORT);
