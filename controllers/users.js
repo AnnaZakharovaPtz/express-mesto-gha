@@ -26,7 +26,7 @@ const getUserById = (req, res) => {
         return;
       }
       if (err.name === 'CastError') {
-        res.status(NOT_FOUND_ERROR).send({ message: 'Запрашиваемый пользователь не найден' });
+        res.status(BAD_REQUEST_ERROR).send({ message: 'Неверный запрос' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
