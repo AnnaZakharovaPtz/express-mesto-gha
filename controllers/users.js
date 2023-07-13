@@ -81,7 +81,7 @@ const createUser = (req, res, next) => {
       email, password: hash, name, about, avatar,
     }))
     .then((user) => {
-      res.status(DOCUMENT_CREATED).send(user);
+      res.status(DOCUMENT_CREATED).send(user.toObject({ useProjection: true }));
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
