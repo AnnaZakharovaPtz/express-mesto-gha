@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Поле "name" должно быть заполнено'],
-    minlength: [2, 'Минимальная длина поля "name" - 2'],
-    maxlength: [30, 'Максимальная длина поля "name" - 30'],
   },
   link: {
     type: String,
     validate: {
-      validator: (v) => validator.isURL(v),
+      validator: (v) => {
+        const urlRegex = /(http|https):\/\/(\w+(-\w+)*\.)+[a-z]{2,}(\/+[\w\-._~:/?#[\]@!$&'()*+,;=]{1,})*/;
+        return urlRegex.test(v);
+      },
+      message: 'Некорректная ссылка на изображение',
     },
     required: [true, 'Поле "link" должно быть заполнено'],
   },
