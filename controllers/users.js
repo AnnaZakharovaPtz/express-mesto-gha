@@ -16,7 +16,7 @@ const login = (req, res, next) => {
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new BadRequestError('Неверный запрос');
+        throw new UnauthorizedError('Неверная почта или пароль');
       }
 
       return bcrypt.compare(password, user.password)
