@@ -36,7 +36,7 @@ const login = (req, res, next) => {
               httpOnly: true,
             })
             .set('Set-Cookie', `jwt=${token}`)
-            .end();
+            .send({});
         })
         .catch(next);
     })
