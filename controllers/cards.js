@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-error');
@@ -18,11 +19,9 @@ const removeCardById = (req, res, next) => {
     .then((card) => {
       if (card) {
         if (req.user._id === card.owner.toString()) {
-          Card.deleteOne(card)
-            .then((result) => {
-              if (result.deletedCount === 1) {
-                res.send(card);
-              }
+          card.deleteOne()
+            .then((deletedCard) => {
+              res.send(deletedCard);
             })
             .catch(next);
         } else {
@@ -42,9 +41,11 @@ const createCard = (req, res, next) => {
       res.status(DOCUMENT_CREATED).send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(err.message));
+        return;
       }
+      next(err);
     });
 };
 

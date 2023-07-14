@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { default: mongoose } = require('mongoose');
 const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-error');
 const UnauthorizedError = require('../errors/unauthorized-error');
@@ -34,7 +35,8 @@ const login = (req, res, next) => {
               maxAge: 3600000,
               httpOnly: true,
             })
-            .send({ token });
+            .set('Set-Cookie', `jwt=${token}`)
+            .end();
         })
         .catch(next);
     })
@@ -84,12 +86,15 @@ const createUser = (req, res, next) => {
       res.status(DOCUMENT_CREATED).send(user.toObject({ useProjection: true }));
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(err.message));
+        return;
       }
-      if (err.name === 'MongoServerError') {
+      if (err.name === 'MongoServerError' && err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
+        return;
       }
+      next(err);
     });
 };
 
@@ -125,9 +130,11 @@ const updateUserAvatar = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(err.message));
+        return;
       }
+      next(err);
     });
 };
 
